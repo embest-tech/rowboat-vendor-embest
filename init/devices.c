@@ -53,6 +53,7 @@ struct uevent {
     const char *subsystem;
     const char *firmware;
     const char *partition_name;
+    const char *country;
     int partition_num;
     int major;
     int minor;
@@ -280,6 +281,7 @@ static void parse_event(const char *msg, struct uevent *uevent)
     uevent->path = "";
     uevent->subsystem = "";
     uevent->firmware = "";
+    uevent->country = "";
     uevent->major = -1;
     uevent->minor = -1;
     uevent->partition_name = NULL;
@@ -311,6 +313,9 @@ static void parse_event(const char *msg, struct uevent *uevent)
         } else if(!strncmp(msg, "PARTNAME=", 9)) {
             msg += 9;
             uevent->partition_name = msg;
+        } else if (!strncmp(msg, "COUNTRY=", 8)) {
+            msg += 8;
+            uevent->country = msg;
         }
 
             /* advance to after the next \0 */
@@ -318,9 +323,10 @@ static void parse_event(const char *msg, struct uevent *uevent)
             ;
     }
 
-    log_event_print("event { '%s', '%s', '%s', '%s', %d, %d }\n",
+    log_event_print("event { '%s', '%s', '%s', '%s', %d, %d, '%s' }\n",
                     uevent->action, uevent->path, uevent->subsystem,
-                    uevent->firmware, uevent->major, uevent->minor);
+                    uevent->firmware, uevent->major, uevent->minor,
+                    uevent->country);
 }
 
 static char **get_character_device_symlinks(struct uevent *uevent)
@@ -723,6 +729,35 @@ root_free_out:
     free(root);
 }
 
+static void handle_crda_event(struct uevent *uevent)
+{
+    int status;
+    int ret;
+    pid_t pid;
+    char country_env[128];
+    char *argv[] = { "/system/bin/crda", NULL };
+    char *envp[] = { country_env, NULL };
+
+    if(strcmp(uevent->subsystem, "platform"))
+        return;
+
+    if(strcmp(uevent->action, "change"))
+        return;
+
+    log_event_print("executing CRDA country=%s\n", uevent->country);
+    sprintf(country_env, "COUNTRY=%s", uevent->country);
+
+    pid = fork();
+    if (!pid) {
+        if (-1 == execve(argv[0], argv, envp))
+            exit(1);
+    } else if (pid != -1) {
+        do {
+            ret = waitpid(pid, &status, 0);
+        } while (ret == -1 && errno == EINTR);
+    }
+}
+
 static void handle_firmware_event(struct uevent *uevent)
 {
     pid_t pid;
@@ -759,6 +794,7 @@ void handle_device_fd()
 
         handle_device_event(&uevent);
         handle_firmware_event(&uevent);
+        handle_crda_event(&uevent);
     }
 }
 
