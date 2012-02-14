@@ -32,6 +32,9 @@ LOCAL_STATIC_LIBRARIES := libcutils libc
 ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),ti816xevm)
 LOCAL_CFLAGS += -DAM389xEVM_SYSLINK
 endif
+ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),ti814xevm)
+LOCAL_CFLAGS += -DAM389xEVM_SYSLINK
+endif
 include $(BUILD_EXECUTABLE)
 
 # Make a symlink from /sbin/ueventd to /init
