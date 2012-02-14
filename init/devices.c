@@ -571,6 +571,11 @@ static void handle_generic_device_event(struct uevent *uevent)
      } else if(!strncmp(uevent->subsystem, "sound", 5)) {
          base = "/dev/snd/";
          mkdir(base, 0755);
+#ifdef AM389xEVM_SYSLINK
+       } else if(!strncmp(uevent->subsystem, "syslinkipc", 10)) {
+           base = "/dev/syslinkipc/";
+           mkdir(base, 0755);
+#endif
      } else if(!strncmp(uevent->subsystem, "misc", 4) &&
                  !strncmp(name, "log_", 4)) {
          base = "/dev/log/";
