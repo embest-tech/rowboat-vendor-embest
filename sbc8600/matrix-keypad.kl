@@ -1,0 +1,7 @@
+# AM335XEVM MATRIX KEYPAD keylayout
+key 158   BACK              WAKE_DROPPED
+key 139   MENU              WAKE
+key 116   POWER             WAKE
+key 108   DPAD_DOWN         WAKE_DROPPED
+key 105   DPAD_LEFT         WAKE_DROPPED
+key 106   DPAD_RIGHT        WAKE_DROPPED

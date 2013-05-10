@@ -1,0 +1,7 @@
+# AM335XEVM GPIO KEYPAD keylayout
+key 115   VOLUME_UP          WAKE
+key 114   VOLUME_DOWN        WAKE
+key 1     BACK               WAKE
+key 59    MENU               WAKE
+key 102   HOME               WAKE
+
