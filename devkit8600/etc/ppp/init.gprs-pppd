@@ -1,0 +1,23 @@
+#!/system/bin/sh
+# An unforunate wrapper script
+# so that the exit code of pppd may be retrieved
+
+# this is a workaround for issue #651747
+#trap "/system/bin/sleep 1;exit 0" TERM
+
+export PATH=/system/bin
+
+PPPD_PID=
+
+setprop "net.gprs.ppp-exit" ""
+
+log -t pppd "Starting pppd"
+
+pppd $*
+
+PPPD_EXIT=$?
+PPPD_PID=$!
+
+log -t pppd "pppd exited with $PPPD_EXIT"
+
+setprop "net.gprs.ppp-exit" "$PPPD_EXIT"

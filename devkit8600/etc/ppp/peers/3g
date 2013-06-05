@@ -1,0 +1,22 @@
+#/etc/ppp/peers/gprs
+# This is pppd script for China Mobile, used Huawei GTM900-B GPRS Module
+# Usage:   root>pppd call gprs
+/dev/ttyUSB2
+115200
+crtscts
+modem
+noauth
+debug
+nodetach
+usepeerdns
+noipdefault
+defaultroute
+#[3gsupport,HSPA-500HU,user $username$]
+#[3gsupport,ETCOM-W338,user $username$]
+user ""
+#[3gsupport,HSPA-500HU,password $password$]
+#[3gsupport,ETCOM-W338,password $password$]
+password ""
+ipcp-accept-local
+ipcp-accept-remote
+connect '/system/bin/chat -s -v -f /system/etc/ppp/3g-connect-chat'

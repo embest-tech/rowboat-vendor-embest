@@ -1,0 +1,36 @@
+
+on init
+    chmod 0777 /
+    chmod 0666 /init.devkit8600.rc
+    chmod 0777 /system
+    chmod 0666 /system/build.prop
+    chmod 0777 /etc/ppp
+    chmod 0777 /etc/ppp/3g-connect-chat
+    chmod 0777 /etc/ppp/evdo-connect-chat
+    chmod 0777 /etc/ppp/peers
+    chmod 0777 /etc/ppp/peers/3g
+    chmod 0777 /etc/ppp/peers/evdo
+    chmod 0777 /etc/ppp/peers/w388
+
+on boot
+
+#usb modem support
+# don't edit follow comments
+#[3gsupport,HSPA-500HU,    setprop ro.radio.3g.name HSPA-500HU]
+#[3gsupport,ETCOM-W338,    setprop ro.radio.3g.name ETCOM-W338]
+#[3gsupport,ETCOM-E300,    setprop ro.radio.3g.name ETCOM-E300]
+#[3gsupport,ETCOM-W388,    setprop ro.radio.3g.name ETCOM-W388]
+    setprop ro.radio.3g.name ETCOM-E300
+
+
+# don't edit follow comments
+#[3gsupport,HSPA-500HU,service pppd_gprs /system/bin/pppd call 3g]
+#[3gsupport,ETCOM-W338,service pppd_gprs /system/bin/pppd call 3g]
+#[3gsupport,ETCOM-E300,service pppd_gprs /system/bin/pppd call evdo]
+#[3gsupport,ETCOM-W388,service pppd_gprs /system/bin/pppd call w388]
+service ril-pppd /system/bin/pppd-ril call evdo
+    user root
+    group system radio
+    disabled
+    oneshot
+

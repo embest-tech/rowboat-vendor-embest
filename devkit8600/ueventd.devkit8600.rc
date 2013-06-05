@@ -1,1 +1,6 @@
 /dev/video0         0666  root       root
+/dev/ttyUSB0        0666  radio      radio
+/dev/ttyUSB1        0666  radio      radio
+/dev/ttyUSB2        0666  radio      radio
+/dev/ttyUSB3        0666  radio      radio
+

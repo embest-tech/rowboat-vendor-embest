@@ -1,0 +1,18 @@
+#/etc/ppp/peers/evdo
+# This is pppd script for China Telecom, used ETCOM E300 3G Module
+# Usage:   root>pppd call evdo
+/dev/ttyUSB1
+115200
+crtscts
+modem
+debug
+nodetach
+usepeerdns
+defaultroute
+#[3gsupport,ETCOM-E300,user $username$]
+user "card"
+#[3gsupport,ETCOM-E300,password $password$]
+password "card"
+connect 'chat -s -v -f /system/etc/ppp/evdo-connect-chat'
+#connect 'chat -v "" "AT" "" "AT&C1" "" "ATDT#777 CONNECT"'
+#disconnect 'chat -v -f /etc/ppp/evdo-disconnect-chat'
