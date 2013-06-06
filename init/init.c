@@ -67,6 +67,7 @@ static char bootloader[32];
 static char hardware[32];
 static unsigned revision = 0;
 static char qemu[32];
+static char calibration[32];
 
 static struct action *cur_action = NULL;
 static struct command *cur_command = NULL;
@@ -141,6 +142,55 @@ static void publish_socket(const char *name, int fd)
 
     /* make sure we don't close-on-exec */
     fcntl(fd, F_SETFD, 0);
+}
+
+int wait_for_service(char *filename) {
+
+    struct stat s;
+    int status;
+    pid_t pid;
+
+    if (stat(filename, &s) != 0) {
+        ERROR("cannot find '%s'", filename);
+        return -1;
+    }
+
+    NOTICE("executing '%s'\n", filename);
+
+    pid = fork();
+
+    if (pid == 0) {
+
+        char tmp[32];
+        int fd, sz;
+
+        get_property_workspace(&fd, &sz);
+        sprintf(tmp, "%d,%d", dup(fd), sz);
+        add_environment("ANDROID_PROPERTY_WORKSPACE", tmp);
+        /* redirect stdio to null */
+        zap_stdio();
+
+        setpgid(0, getpid());
+        /* execute */
+        execve(filename, NULL, (char **)ENV);
+        /* exit */
+        _exit(0);
+    }
+
+    if (pid < 0) {
+        ERROR("failed to fork and start '%s'\n", filename);
+        return -1;
+    }
+
+    if (-1 == waitpid(pid, &status, WCONTINUED | WUNTRACED)) {
+        ERROR("Wait for child error\n");
+        return -1;
+    }
+
+    if (WIFEXITED(status)) {
+        NOTICE("executed '%s' done\n", filename);
+    }
+    return 0;
 }
 
 void service_start(struct service *svc, const char *dynamic_args)
@@ -447,7 +497,10 @@ static void import_kernel_nv(char *name, int in_qemu)
             strlcpy(bootloader, value, sizeof(bootloader));
         } else if (!strcmp(name,"androidboot.hardware")) {
             strlcpy(hardware, value, sizeof(hardware));
-        }
+        } else if (!strcmp(name, "calibration")) {
+	    strlcpy(calibration, value, sizeof(calibration));
+	}
+	
     } else {
         /* in the emulator, export any kernel option with the
          * ro.kernel. prefix */
@@ -590,6 +643,7 @@ static int set_init_properties_action(int nargs, char **args)
     else
         property_set("ro.factorytest", "0");
 
+    property_set("ro.calibration", calibration[0] ? calibration : "");
     property_set("ro.serialno", serialno[0] ? serialno : "");
     property_set("ro.bootmode", bootmode[0] ? bootmode : "unknown");
     property_set("ro.baseband", baseband[0] ? baseband : "unknown");

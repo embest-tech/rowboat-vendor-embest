@@ -176,7 +176,7 @@ int do_domainname(int nargs, char **args)
 
 int do_exec(int nargs, char **args)
 {
-    return -1;
+    return wait_for_service(args[1]);
 }
 
 int do_export(int nargs, char **args)
