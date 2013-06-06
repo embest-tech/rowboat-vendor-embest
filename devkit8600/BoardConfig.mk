@@ -58,6 +58,10 @@ BOARD_CACHEIMAGE_PARTITION_SIZE := 268435456
 BOARD_CACHEIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_FLASH_BLOCK_SIZE := 4096
 
+TARGET_TS_CALIBRATION := true
+TARGET_TS_DEVICE := "ti-tsc"
+TARGET_TS_PARAM := "/sys/devices/platform/omap/ti_tscadc/tsc/calibration"
+
 # Connectivity - Wi-Fi
 USES_TI_MAC80211 := true
 ifdef USES_TI_MAC80211

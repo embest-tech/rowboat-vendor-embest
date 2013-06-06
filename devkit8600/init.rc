@@ -194,6 +194,8 @@ on post-fs-data
 	# PWM-Backlight for display brightness
 	chmod 0666 /sys/class/backlight/pwm-backlight/brightness
 
+    exec /sbin/ts_calibrator
+
 on boot
 # basic network init
     ifup lo
@@ -272,8 +274,8 @@ on boot
     insmod /system/lib/modules/wl18xx.ko
 
 #Owners, Modes for Bluetooth
-    chmod 0660 /dev/ttyO1
-    chown bluetooth bluetooth /dev/ttyO1
+    chmod 0660 /dev/ttyO3
+    chown bluetooth bluetooth /dev/ttyO3
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
 
