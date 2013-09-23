@@ -20,7 +20,8 @@ PRODUCT_COPY_FILES := \
 	device/embest/sbc8600/ueventd.sbc8600.rc:root/ueventd.sbc8600.rc \
 	device/embest/sbc8600/vold.fstab:system/etc/vold.fstab \
 	frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-	frameworks/base/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml
+	frameworks/base/data/etc/android.hardware.wifi.direct.xml:system/etc/permissions/android.hardware.wifi.direct.xml \
+	device/embest/sbc8600/busybox:system/bin/busybox
 
 # Bluetooth support
 PRODUCT_COPY_FILES += \
