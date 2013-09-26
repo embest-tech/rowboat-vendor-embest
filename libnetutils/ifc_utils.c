@@ -782,7 +782,7 @@ int ifc_remove_default_route(const char *ifname)
 int
 ifc_configure(const char *ifname,
         in_addr_t address,
-        uint32_t prefixLength,
+        in_addr_t netmask,
         in_addr_t gateway,
         in_addr_t dns1,
         in_addr_t dns2) {
@@ -801,8 +801,8 @@ ifc_configure(const char *ifname,
         ifc_close();
         return -1;
     }
-    if (ifc_set_prefixLength(ifname, prefixLength)) {
-        printerr("failed to set prefixLength %d: %s\n", prefixLength, strerror(errno));
+    if (ifc_set_mask(ifname, netmask)) {
+        printerr("failed to set netmask %s: %s\n", ipaddr_to_string(netmask), strerror(errno));
         ifc_close();
         return -1;
     }
@@ -818,6 +818,9 @@ ifc_configure(const char *ifname,
     property_set(dns_prop_name, dns1 ? ipaddr_to_string(dns1) : "");
     snprintf(dns_prop_name, sizeof(dns_prop_name), "net.%s.dns2", ifname);
     property_set(dns_prop_name, dns2 ? ipaddr_to_string(dns2) : "");
+
+    snprintf(dns_prop_name, sizeof(dns_prop_name), "net.dns1");
+    property_set(dns_prop_name, dns1 ? ipaddr_to_string(dns1) : "");
 
     return 0;
 }
