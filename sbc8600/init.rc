@@ -194,6 +194,8 @@ on post-fs-data
 	# PWM-Backlight for display brightness
 	chmod 0666 /sys/class/backlight/pwm-backlight/brightness
 
+    exec /sbin/ts_calibrator
+
 on boot
 # basic network init
     ifup lo
@@ -273,7 +275,7 @@ on boot
 
 #Owners, Modes for Bluetooth
     chmod 0660 /dev/ttyO1
-    chown bluetooth bluetooth /dev/ttyO1
+#    chown bluetooth bluetooth /dev/ttyO1
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
 
@@ -520,6 +522,10 @@ service dhcpcd_eth0 /system/bin/dhcpcd -ABKL
     disabled
     oneshot
 
+service dhcpcd_eth1 /system/bin/dhcpcd -ABKL
+    disabled
+    oneshot
+
 service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -iwlan0
     socket wpa_wlan0 dgram 660 wifi wifi
     disabled
@@ -534,10 +540,10 @@ service iprenew_wlan0 /system/bin/dhcpcd -n
     oneshot
 
 #shared transport user space mgr service for Bluetooth, FM and GPS
-service uim /system/bin/uim-sysfs
-    class core
-    user bluetooth
-    group bluetooth net_bt_admin
+#service uim /system/bin/uim-sysfs
+#    class core
+#    user bluetooth
+#    group bluetooth net_bt_admin
 
 service hostapd_bin /system/bin/hostapd -d /data/misc/wifi/hostapd.conf
     socket wpa_wlan1 dgram 660 wifi wifi
