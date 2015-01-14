@@ -28,6 +28,12 @@ PRODUCT_COPY_FILES += \
 	$(LOCAL_PATH)/android.hardware.bluetooth.xml:system/etc/permissions/android.hardware.bluetooth.xml \
 	system/bluetooth/data/main.nonsmartphone.conf:system/etc/bluetooth/main.conf
 
+# WIFI support
+PRODUCT_COPY_FILES += \
+	device/embest/sbc8600/rt5370sta.ko:system/lib/hw/rt5370sta.ko \
+    device/embest/sbc8600/RT2870STA.dat:/system/etc/Wireless/RT2870STA/RT2870STA.dat \
+    device/embest/sbc8600/wpa_supplicant.conf:/system/etc/wifi/wpa_supplicant.conf 
+
 # These are the hardware-specific features
 PRODUCT_COPY_FILES += \
    frameworks/base/data/etc/android.hardware.sensor.accelerometer.xml:system/etc/permissions/android.hardware.sensor.accelerometer.xml \
@@ -39,7 +45,7 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/matrix-keypad.kl:system/usr/keylayout/matrix-keypad.kl
 
 PRODUCT_PROPERTY_OVERRIDES := \
-	wifi.interface=wlan0 \
+	wifi.interface=ra0 \
 	hwui.render_dirty_regions=false
 
 PRODUCT_CHARACTERISTICS := tablet,nosdcard

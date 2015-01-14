@@ -63,26 +63,15 @@ TARGET_TS_DEVICE := "ti-tsc"
 TARGET_TS_PARAM := "/sys/devices/platform/omap/ti_tscadc/tsc/calibration"
 
 # Connectivity - Wi-Fi
-USES_TI_MAC80211 := true
-ifdef USES_TI_MAC80211
-BOARD_WPA_SUPPLICANT_DRIVER      := NL80211
+USE_TI := true
+ifdef USE_TI
+BOARD_WPA_SUPPLICANT_DRIVER      := WEXT
 WPA_SUPPLICANT_VERSION           := VER_0_8_X
-BOARD_WLAN_DEVICE                := wl12xx_mac80211
-BOARD_SOFTAP_DEVICE              := wl12xx_mac80211
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wl12xx
-BOARD_HOSTAPD_DRIVER             := NL80211
-BOARD_HOSTAPD_PRIVATE_LIB        := lib_driver_cmd_wl12xx
 
-ifeq ($(WILINK), wl18xx)
-WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/wlcore_sdio.ko"
-WIFI_DRIVER_MODULE_NAME          := "wlcore_sdio"
-else
-WIFI_DRIVER_MODULE_PATH          := "/system/lib/modules/wl12xx_sdio.ko"
-WIFI_DRIVER_MODULE_NAME          := "wl12xx_sdio"
-endif
+WIFI_DRIVER_MODULE_PATH          := "/system/lib/hw/rt5370sta.ko"
+WIFI_DRIVER_MODULE_NAME          := "rt5370sta"
 
 WIFI_FIRMWARE_LOADER             := ""
-COMMON_GLOBAL_CFLAGS += -DUSES_TI_MAC80211
 endif
 
 TARGET_PROVIDES_INIT_RC := true
